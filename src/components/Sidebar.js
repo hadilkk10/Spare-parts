@@ -9,29 +9,49 @@ import { IoPerson } from "react-icons/io5";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { PiShoppingCartSimpleFill } from "react-icons/pi";
 import { LuLogOut } from "react-icons/lu";
+import { fetchLogineduser } from "../serveces/userService";
+import { useQuery } from "@tanstack/react-query";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
   const [showImagePopup, setShowImagePopup] = useState(false);
 
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: fetchLogineduser,
+  });
+
+  // console.log("data",data?.data)
+
+  const userData = data?.data?.name
+
+  // console.log("data",userData)
+
   const toggleSidebar = () => setIsOpen(!isOpen);
   const toggleDark = () => setDarkMode(!darkMode);
 
-  const menu = [
-    { name: "Dashboard", icon: <HiMiniHome />, path: "/" },
-    { name: "Products", icon: <PiShoppingCartSimpleFill />, path: "/products" },
-    { name: "Orders", icon: <FaChartBar />, path: "/orders" },
-    { name: "Payments", icon: <IoIosWallet />, path: "/payments" },
-    { name: "Offers", icon: <BiSolidOffer />, path: "/offers" },
-    { name: "Users", icon: <IoPerson />, path: "/users" },
-    { name: "Chat", icon: <IoIosChatbubbles />, path: "/chat" },
-    { name: "Delivery", icon: <GiScooter />, path: "/delivery" },
-    { name: "Reports", icon: <FaBook />, path: "/reports" },
-    { name: "Notifications", icon: <FaBell />, path: "/notifications" },
-    { name: "Settings", icon: <IoIosSettings />, path: "/settings" },
-    { name: "AdminAccess", icon: <MdAdminPanelSettings />, path: "/admin-access" },
-  ];
+  if(isLoading){
+    <h1>Page IS Loading</h1>
+  }
+    if(error){
+    <h1>cant fetch data there is an error occured</h1>
+  }
+
+      const menu = [
+        { name: "Dashboard", icon: <HiMiniHome />, path: "/dashboard" },
+        { name: "Products", icon: <PiShoppingCartSimpleFill />, path: "/products" },
+        { name: "Orders", icon: <FaChartBar />, path: "/orders" },
+        { name: "Payments", icon: <IoIosWallet />, path: "/payments" },
+        { name: "Offers", icon: <BiSolidOffer />, path: "/offers" },
+        { name: "Users", icon: <IoPerson />, path: "/users" },
+        { name: "Chat", icon: <IoIosChatbubbles />, path:"/chat"},
+        { name: "Delivery", icon: <GiScooter />, path: "/delivery" },
+        { name: "Reports", icon: <FaBook />, path: "/reports" },
+        { name: "Notifications", icon: <FaBell />, path: "/notifications" },
+        { name: "Settings", icon: <IoIosSettings />, path: "/settings" },
+        { name: "AdminAccess", icon: <MdAdminPanelSettings />, path: "/admin-access" },
+      ];
 
   return (
     <div className={`${darkMode ? "dark" : ""}`}>
@@ -55,7 +75,7 @@ const Sidebar = () => {
               </div>
               {isOpen && (
                 <div>
-                  <h1 className="text-gray-900 dark:text-white font-bold text-xl">Spare Doc</h1>
+                  <h1 className="text-gray-900 dark:text-white font-bold text-xl">{userData}</h1>
                   <p className="text-gray-500 dark:text-gray-300 text-sm">Admin panel</p>
                 </div>
               )}
